@@ -1,0 +1,212 @@
+﻿<UserControl x:Class="CrybbBot.Views.MainMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CrybbBot.Views"
+             xmlns:viewM="clr-namespace:CrybbBot.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <viewM:MainMenuViewModel x:Key="ViewModel" />
+            <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+
+    <ScrollViewer DataContext="{StaticResource ViewModel}"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  VerticalScrollBarVisibility="Auto"
+                  CanContentScroll="True">
+        <Grid VerticalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <Grid Grid.Column="1"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height=".2*"/>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height=".6*" MinHeight="160"/>
+                </Grid.RowDefinitions>
+
+                <Viewbox Stretch="Uniform">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Grid.ColumnSpan="2"
+                               Source="/Resources/CrybbBotLogo.png"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Stretch="None">
+                            <Image.LayoutTransform>
+                                <ScaleTransform ScaleX="0.15" ScaleY="0.15"/>
+                            </Image.LayoutTransform>
+                        </Image>
+
+                        <TextBlock Grid.Column="1"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Bottom"
+                                   Margin="5 -3"
+                                   TextAlignment="Right"
+                                   TextWrapping="Wrap"
+                                   FontSize="14"
+                                   Foreground="{StaticResource MaterialDesignLightSeparatorBackground}">
+                            <!--<Run Text="🐺" FontSize="14"/>-->
+                            <Run Text="v."/>
+                            <Run Text="{Binding AppVersion, Mode=OneWay}"/>
+                            <Run Text="alpha"/>
+                        </TextBlock>
+                    </Grid>
+                </Viewbox>
+
+                <Button Grid.Row="2"
+                        Content="Нове повідомлення"
+                        FontSize="18"
+                        Padding="100 0"
+                        Click="CreateMessage_Click"
+                        Style="{StaticResource MaterialDesignRaisedButton}"/>
+                <Button Grid.Row="4"
+                        Content="Усі повідомлення"
+                        FontSize="18"
+                        Click="ShowAllMessages_Click"
+                        Style="{StaticResource MaterialDesignRaisedButton}"/>
+                <Button Grid.Row="6"
+                        Content="Керування каналами"
+                        FontSize="18"
+                        Click="ChannelManagement_Click"
+                        Style="{StaticResource MaterialDesignRaisedButton}"/>
+                <Button Grid.Row="8"
+                        Content="Налаштування"
+                        FontSize="18"
+                        Click="ShowSettings_Click"
+                        Style="{StaticResource MaterialDesignRaisedButton}"/>
+                <Button Grid.Row="9"
+                        Margin="0 15 0 0"
+                        Content="Інструменти розробника"
+                        FontSize="18"
+                        Click="ShowDeveloperTools_Click"
+                        Style="{StaticResource MaterialDesignRaisedButton}"
+                        Visibility="{Binding IsDeveloperToolEnabled, Converter={StaticResource BoolToVisibility}}"/>
+
+                <!--BOT STATUS CONTROLL-->
+                <Border Grid.Row="11"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"
+                        Margin="0 10"
+                        CornerRadius="10"
+                        Background="#07FFFFFF"
+                        BorderThickness="1"
+                        BorderBrush="{StaticResource MaterialDesignLightSeparatorBackground}">
+                    <Grid Margin="8 15">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto" MinHeight="60"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" MinWidth="200"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="*" MinWidth="200"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.ColumnSpan="3"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="20"
+                                   FontWeight="Black"
+                                   Text="Статус бота"/>
+
+                        <StackPanel Grid.Row="1"
+                                    Orientation="Vertical"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Visibility="{Binding BotIsRunningVisibility, Mode=OneWay}">
+                            <Image HorizontalAlignment="Center"
+                                   Width="64"
+                                   Height="64"
+                                   Source="/Resources/slack_running.png"
+                                   MouseDown="Image_MouseDown"
+                                   MouseUp="Image_MouseUp"
+                                   MouseLeave="Image_MouseLeave"/>
+                            <TextBlock FontSize="16"
+                                       Text="Працює"
+                                       FontWeight="Black"/>
+                        </StackPanel>
+
+                        <Button Grid.Row="1"
+                                Click="StartBot_Click"
+                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                Visibility="{Binding BotIsNotRunningVisibility, Mode=OneWay}">
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                <md:PackIcon Kind="Play"
+                                             Margin="0 2 5 0"
+                                             VerticalAlignment="Center"/>
+                                <TextBlock VerticalAlignment="Center"
+                                           FontSize="16"
+                                           Text="Запустити"/>
+                            </StackPanel>
+                        </Button>
+
+                        <StackPanel Grid.Row="1"
+                                    Grid.Column="2"
+                                    Orientation="Vertical"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Visibility="{Binding BotIsNotRunningVisibility, Mode=OneWay}">
+                            <Image HorizontalAlignment="Center"
+                                   Width="54"
+                                   Height="54"
+                                   Margin="5"
+                                   Source="/Resources/slack_stopped.png"
+                                   MouseDown="Image_MouseDown"
+                                   MouseUp="Image_MouseUp"
+                                   MouseLeave="Image_MouseLeave"/>
+                            <TextBlock FontSize="16"
+                                       Text="Зупинений"
+                                       FontWeight="Black"/>
+                        </StackPanel>
+
+                        <Button Grid.Row="1"
+                                Grid.Column="2"
+                                Click="StopBot_Click"
+                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                Visibility="{Binding BotIsRunningVisibility, Mode=OneWay}">
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                <md:PackIcon Kind="Stop"
+                                             Margin="0 2 5 0"
+                                             VerticalAlignment="Center"/>
+                                <TextBlock VerticalAlignment="Center"
+                                           FontSize="16"
+                                           Text="Зупинити"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,543 @@
+﻿<UserControl x:Class="CrybbBot.Views.NewMessageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CrybbBot.Views"
+             xmlns:viewM="clr-namespace:CrybbBot.ViewModels"
+             xmlns:conv="clr-namespace:CrybbBot.Converters"
+             xmlns:beh="clr-namespace:CrybbBot.Behavior"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <viewM:NewMessageViewModel x:Key="ViewModel" />
+            <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+            <conv:SubtractConverter x:Key="SubtractConverter"/>
+            <conv:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter"/>
+            <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <conv:InvertBoolConverter x:Key="InvertBoolConverter"/>
+            <conv:InvertBoolConverter2 x:Key="InvertBoolConverter2"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid DataContext="{StaticResource ViewModel}"
+          x:Name="Root"
+          Margin="1"
+          AllowDrop="True"
+          PreviewDragOver="Attachments_PreviewDragOver"
+          Drop="Attachments_Drop">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition MinHeight="105" Height="105" MaxHeight="400"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="400"/>
+        </Grid.ColumnDefinitions>
+
+        <!--<TextBox Grid.ColumnSpan="3"
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Top"
+                 VerticalScrollBarVisibility="Auto"
+                 Height="100"
+                 Padding="5"
+                 Margin="1 0"
+                 BorderThickness="1"
+                 AcceptsReturn="True"
+                 TextWrapping="WrapWithOverflow"
+                 FontSize="18"
+                 MaxLength="3000"
+                 x:Name="tbMessage"
+                 Text="{Binding MsgBody, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 IsReadOnly="{Binding AlreadySent, Mode=OneWay, Converter={StaticResource InvertBoolConverter2}}"
+                 beh:FocusBehavior.IsFocused="{Binding FocusTextBox, Mode=TwoWay}"
+                 AllowDrop="True"
+                 PreviewDragOver="Attachments_PreviewDragOver"
+                 Drop="Attachments_Drop"/>-->
+        <Grid Grid.Row="1"
+              Grid.ColumnSpan="3">
+            <RichTextBox Grid.ColumnSpan="3"
+                         HorizontalAlignment="Stretch"
+                         VerticalAlignment="Stretch"
+                         VerticalContentAlignment="Top"
+                         VerticalScrollBarVisibility="Auto"
+                         HorizontalScrollBarVisibility="Disabled"
+                         Padding="5"
+                         Margin="1 0"
+                         BorderThickness="1"
+                         AcceptsReturn="True"
+                         FontSize="18"
+                         FontFamily="Segoe UI"
+                         x:Name="tbMessage"
+                         TextChanged="TbMessage_TextChanged"
+                         IsReadOnly="{Binding AlreadySent, Mode=OneWay, Converter={StaticResource InvertBoolConverter2}}"
+                         beh:FocusBehavior.IsFocused="{Binding FocusTextBox, Mode=TwoWay}"
+                         beh:SlackRichTextBoxBehavior.EnablePlainTextMode="True"
+                         AllowDrop="True"
+                         PreviewMouseMove="TbMessage_PreviewMouseMove"
+                         MouseLeave="TbMessage_MouseLeave"
+                         PreviewDragOver="Attachments_PreviewDragOver"
+                         Drop="Attachments_Drop"/>
+        </Grid>
+
+        <GridSplitter Grid.Row="2"
+                      Grid.ColumnSpan="3"
+                      Height="5"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Center"
+                      ResizeDirection="Rows"
+                      ResizeBehavior="PreviousAndNext"
+                      Background="#666"/>
+
+        <Grid Grid.Row="0"
+              x:Name="ButtonsPannel"
+              Margin="0 -3 0 0"
+              Height="36"
+              Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="8"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="8"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="8"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0"
+                    Width="32"
+                    Height="32"
+                    Margin="2"
+                    Padding="0"
+                    Click="Button_Click"
+                    Command="EditingCommands.ToggleBold"
+                    CommandTarget="{Binding ElementName=tbMessage}"
+                    ToolTip="Жирний"
+                    Style="{StaticResource MaterialDesignRaisedButton}">
+                <TextBlock Text="B"
+                           FontWeight="Bold"
+                           FontSize="18"/>
+            </Button>
+
+            <Button Grid.Column="1"
+                    Width="32"
+                    Height="32"
+                    Margin="2"
+                    Padding="0"
+                    Click="Button_Click"
+                    Command="EditingCommands.ToggleItalic"
+                    CommandTarget="{Binding ElementName=tbMessage}"
+                    ToolTip="Курсив"
+                    Style="{StaticResource MaterialDesignRaisedButton}">
+                <TextBlock Text="I"
+                           FontStyle="Italic"
+                           FontSize="18"/>
+            </Button>
+
+            <Button Grid.Column="2"
+                    Width="32"
+                    Height="32"
+                    Margin="2"
+                    Padding="0"
+                    Click="Button_Click"
+                    Command="EditingCommands.ToggleUnderline"
+                    CommandTarget="{Binding ElementName=tbMessage}"
+                    ToolTip="Підкреслення"
+                    Style="{StaticResource MaterialDesignRaisedButton}">
+                <TextBlock Text="U"
+                           TextDecorations="Underline"
+                           FontSize="18"/>
+            </Button>
+
+            <Button Grid.Column="3"
+                    Width="32"
+                    Height="32"
+                    Margin="2"
+                    Padding="0"
+                    Click="Strike_Click"
+                    ToolTip="Закреслення"
+                    Style="{StaticResource MaterialDesignRaisedButton}">
+                <TextBlock Text="S"
+                           TextDecorations="Strikethrough"
+                           FontSize="18"/>
+            </Button>
+
+            <Button Grid.Column="5"
+                    Width="32"
+                    Height="32"
+                    Margin="2"
+                    Padding="0"
+                    Click="InsertLink_Click"
+                    ToolTip="Посилання"
+                    Style="{StaticResource MaterialDesignRaisedButton}">
+                <TextBlock Text="🔗"
+                           FontSize="18"/>
+            </Button>
+
+            <Button Grid.Column="7"
+                    Width="32"
+                    Height="32"
+                    Margin="2"
+                    Padding="0"
+                    Click="Button_Click"
+                    Command="EditingCommands.ToggleBullets"
+                    CommandTarget="{Binding ElementName=tbMessage}"
+                    ToolTip="Список"
+                    Style="{StaticResource MaterialDesignRaisedButton}">
+                <TextBlock Text="•≡"
+                           FontSize="20"/>
+            </Button>
+
+            <Button Grid.Column="8"
+                    Width="32"
+                    Height="32"
+                    Margin="2"
+                    Padding="0"
+                    Click="Button_Click"
+                    Command="EditingCommands.ToggleNumbering"
+                    CommandTarget="{Binding ElementName=tbMessage}"
+                    ToolTip="Нумерація"
+                    Style="{StaticResource MaterialDesignRaisedButton}">
+                <TextBlock Text="1≡"
+                           FontSize="20"/>
+            </Button>
+
+            <Button Grid.Column="9"
+                    Width="32"
+                    Height="32"
+                    Margin="2"
+                    Padding="0"
+                    Click="Quote_Click"
+                    ToolTip="Цитата"
+                    Style="{StaticResource MaterialDesignRaisedButton}">
+                <TextBlock Text="❝"
+                           FontSize="20"/>
+            </Button>
+
+            <Button Grid.Column="11"
+                    Width="32"
+                    Height="32"
+                    Margin="2"
+                    Padding="0"
+                    Click="InlineCode_Click"
+                    ToolTip="Код"
+                    Style="{StaticResource MaterialDesignRaisedButton}">
+                <md:PackIcon Kind="Code"
+                             Margin="0 0 2 0"
+                             VerticalAlignment="Center"/>
+            </Button>
+
+            <Button Grid.Column="12"
+                    Width="32"
+                    Height="32"
+                    Margin="2"
+                    Padding="0"
+                    Click="CodeBlock_Click"
+                    ToolTip="Кодовий блок"
+                    Style="{StaticResource MaterialDesignRaisedButton}">
+                <md:PackIcon Kind="CodeBlockXml"
+                             Margin="0 0 2 0"
+                             VerticalAlignment="Center"/>
+            </Button>
+        </Grid>
+
+        <Grid Grid.Row="3"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Margin="0 0 0 10"
+                    Padding="0 3"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Background="#11FFFFFF"
+                    CornerRadius="5"
+                    AllowDrop="True"
+                    PreviewDragOver="Attachments_PreviewDragOver"
+                    Drop="Attachments_Drop"
+                    Visibility="{Binding AreReferencesVisible, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+                <ListView HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          HorizontalContentAlignment="Stretch"
+                          MaxHeight="105"
+                          SelectionMode="Single"
+                          ItemsSource="{Binding References}"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="3 -7"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="{Binding TitleOrUrl}"
+                                           Margin="5 0"
+                                           VerticalAlignment="Center"
+                                           MaxWidth="{Binding ActualWidth,
+                                                      RelativeSource={RelativeSource AncestorType=ListView},
+                                                      Converter={StaticResource SubtractConverter},
+                                                      ConverterParameter=120}"/>
+
+                                <!-- EDIT BUTTON -->
+                                <Button Grid.Column="1"
+                                        Margin="5 0"
+                                        Padding="8 3"
+                                        ToolTip="Змінити"
+                                        Click="EditReference_CLick">
+                                    <md:PackIcon Kind="Edit"
+                                                 Width="16"
+                                                 Height="16"
+                                                 VerticalAlignment="Center"/>
+                                </Button>
+
+                                <!-- EDIT BUTTON -->
+                                <Button Grid.Column="2"
+                                        Margin="5 0 5 0"
+                                        Padding="8 3"
+                                        ToolTip="Видалити"
+                                        Click="RemoveReference_CLick">
+                                    <md:PackIcon Kind="Delete"
+                                                 Width="16"
+                                                 Height="16"
+                                                 VerticalAlignment="Center"/>
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Border>
+
+            <Border Grid.Row="1"
+                    x:Name="AttachmentsBorder"
+                    VerticalAlignment="Stretch"
+                    Background="#11FFFFFF"
+                    CornerRadius="5"
+                    AllowDrop="True"
+                    PreviewDragOver="Attachments_PreviewDragOver"
+                    Drop="Attachments_Drop">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              CanContentScroll="True"
+                              Height="{Binding ActualHeight, ElementName=AttachmentsBorder}">
+                    <ItemsControl ItemsSource="{Binding Attachments}"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Top">
+                        <!-- Tell ItemsControl to use WrapPanel -->
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <ScrollViewer Grid.Row="3"
+                      Grid.Column="2"
+                      VerticalScrollBarVisibility="Auto"
+                      CanContentScroll="True">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*" MinWidth="215"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Click="AddAttachment_Click"
+                            Tag="0"
+                            Style="{StaticResource MaterialDesignRaisedButton}">
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                            <md:PackIcon Kind="AddToPhotos"
+                                         Margin="0 2 5 0"
+                                         VerticalAlignment="Center"/>
+                            <TextBlock VerticalAlignment="Center"
+                                       FontSize="14"
+                                       Text="Прикріпити файл"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Grid.Column="2"
+                            Tag="1"
+                            Click="AddAttachment_Click"
+                            Style="{StaticResource MaterialDesignRaisedButton}">
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                            <md:PackIcon Kind="AddToPhotos"
+                                         Margin="0 2 5 0"
+                                         VerticalAlignment="Center"/>
+                            <TextBlock VerticalAlignment="Center"
+                                       FontSize="14"
+                                       Text="Прикріпити посилання"/>
+                        </StackPanel>
+                    </Button>
+                </Grid>
+
+                <TextBlock Grid.Row="2"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           FontSize="20"
+                           Text="Дата і час публікації"/>
+
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <DatePicker HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                FontSize="20"
+                                IsEnabled="{Binding AlreadySent, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}"
+                                SelectedDate="{Binding SelectedDate, Mode=TwoWay}"/>
+                    <md:TimePicker Grid.Column="2"
+                                   HorizontalAlignment="Stretch"
+                                   VerticalAlignment="Center"
+                                   FontSize="20"
+                                   IsEnabled="{Binding AlreadySent, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}"
+                                   SelectedTime="{Binding SelectedTime, Mode=TwoWay}"/>
+                </Grid>
+
+                <local:ChannelMultiSelectComboBox DataContext="{Binding ChannelCombo}" 
+                                                  Grid.Row="5"
+                                                  VerticalAlignment="Top"
+                                                  HorizontalAlignment="Stretch"
+                                                  x:Name="_comboBox"
+                                                  beh:FocusBehavior.IsFocused="{Binding DataContext.FocusChannels,
+                                                                               ElementName=Root,
+                                                                               Mode=TwoWay}"/>
+
+                <Button Grid.Row="7"
+                        VerticalAlignment="Top"
+                        Command="{Binding ClearCommand}"
+                        Style="{StaticResource MaterialDesignRaisedButton}"
+                        Visibility="{Binding MessageForEdit, Mode=OneWay, Converter={StaticResource ObjectToVisibilityConverter}, ConverterParameter=Invert}">
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <md:PackIcon Kind="Delete"
+                                     Margin="0 2 5 0"
+                                     VerticalAlignment="Center"/>
+                        <TextBlock VerticalAlignment="Center"
+                                   FontSize="20"
+                                   Text="Очистити"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Grid.Row="7"
+                        VerticalAlignment="Top"
+                        Command="{Binding DeleteMessageCommand}"
+                        Style="{StaticResource MaterialDesignRaisedButton}"
+                        Visibility="{Binding MessageForEdit, Mode=OneWay, Converter={StaticResource ObjectToVisibilityConverter}}">
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <md:PackIcon Kind="Delete"
+                                     Margin="0 2 5 0"
+                                     VerticalAlignment="Center"/>
+                        <TextBlock VerticalAlignment="Center"
+                                   FontSize="20"
+                                   Text="Видалити"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Grid.Row="9"
+                        VerticalAlignment="Top"
+                        Command="{Binding ScheduleCommand}"
+                        Style="{StaticResource MaterialDesignRaisedButton}"
+                        IsEnabled="{Binding CanSend, Mode=OneWay}"
+                        Visibility="{Binding AlreadySent, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}">
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <md:PackIcon Kind="Done"
+                                     Margin="0 2 5 0"
+                                     VerticalAlignment="Center"/>
+                        <TextBlock VerticalAlignment="Center"
+                                   FontSize="20"
+                                   Text="Зберегти"/>
+                    </StackPanel>
+                </Button>
+
+                <Grid Grid.Row="9"
+                      HorizontalAlignment="Center"
+                      Visibility="{Binding AlreadySent, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Margin="5 0"
+                               HorizontalAlignment="Left"
+                               FontSize="20"
+                               Text="Повідомлення відправлено:"/>
+
+                    <TextBlock Grid.Column="1"
+                               Margin="5 0"
+                               HorizontalAlignment="Left"
+                               FontSize="20"
+                               Text="{Binding SendingDT, Mode=OneWay}"/>
+                </Grid>
+
+                <Button Grid.Row="12"
+                        VerticalAlignment="Top"
+                        Command="{Binding SendNowCommand}"
+                        Style="{StaticResource MaterialDesignRaisedButton}"
+                        IsEnabled="{Binding CanSend, Mode=OneWay}"
+                        Visibility="{Binding AlreadySent, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}">
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <md:PackIcon Kind="Send"
+                                     Width="12"
+                                     Height="12"
+                                     Margin="0 2 6 0"
+                                     VerticalAlignment="Center"/>
+                        <TextBlock VerticalAlignment="Center"
+                                   FontSize="20"
+                                   Text="Відправити зараз"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

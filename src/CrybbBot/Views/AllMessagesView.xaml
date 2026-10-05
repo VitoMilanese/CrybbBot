@@ -1,0 +1,246 @@
+﻿<UserControl x:Class="CrybbBot.Views.AllMessagesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CrybbBot.Views"
+             xmlns:viewM="clr-namespace:CrybbBot.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <viewM:AllMessagesViewModel x:Key="ViewModel" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <ScrollViewer DataContext="{StaticResource ViewModel}"
+                  VerticalScrollBarVisibility="Auto"
+                  CanContentScroll="True"
+                  Margin="1">
+        <Grid>
+            <ItemsControl ItemsSource="{Binding Messages}"/>
+
+            <Grid Grid.Row="0"
+                  x:Name="ButtonsPannel"
+                  Margin="0 -3 0 0"
+                  Height="36"
+                  Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <ToggleButton Grid.Column="0"
+                              Width="32"
+                              Height="32"
+                              Margin="2"
+                              Padding="0"
+                              IsChecked="{Binding IsFilterOrderAscending, Mode=TwoWay}">
+                    <ToggleButton.Style>
+                        <Style TargetType="ToggleButton" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                            <Style.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="ToolTip" Value="Сортувати від старих до нових"/>
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="False">
+                                    <Setter Property="ToolTip" Value="Сортувати від нових до старих"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+
+                    <md:PackIcon Margin="0 0 2 0"
+                                 Width="26"
+                                 Height="26"
+                                 VerticalAlignment="Center">
+                        <md:PackIcon.Style>
+                            <Style TargetType="md:PackIcon">
+                                <Setter Property="Kind" Value="SortDateDescending"/>
+
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=ToggleButton}}" Value="True">
+                                        <Setter Property="Kind" Value="SortDateAscending"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+
+                            </Style>
+                        </md:PackIcon.Style>
+                    </md:PackIcon>
+                </ToggleButton>
+
+                <ToggleButton Grid.Column="2"
+                              Width="32"
+                              Height="32"
+                              Margin="2"
+                              Padding="0"
+                              IsChecked="{Binding IsFilterAll, Mode=TwoWay}"
+                              ToolTip="Усі">
+                    <ToggleButton.Style>
+                        <Style TargetType="ToggleButton" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                            <Style.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Foreground" Value="LightGreen"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+
+                    <md:PackIcon Kind="Asterisk"
+                                 Margin="0 0 2 0"
+                                 Width="24"
+                                 Height="24"
+                                 VerticalAlignment="Center"/>
+                </ToggleButton>
+
+                <ToggleButton Grid.Column="3"
+                              Width="32"
+                              Height="32"
+                              Margin="2"
+                              Padding="0"
+                              IsChecked="{Binding IsFilterScheduled, Mode=TwoWay}"
+                              ToolTip="Заплановані">
+                    <ToggleButton.Style>
+                        <Style TargetType="ToggleButton" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                            <Style.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Foreground" Value="LightGreen"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+
+                    <!--<TextBlock Text="B"
+                               FontWeight="Bold"
+                               FontSize="18"/>-->
+                    <md:PackIcon Kind="InvoiceTextScheduledOutline"
+                                 Margin="0 0 2 0"
+                                 Width="26"
+                                 Height="26"
+                                 VerticalAlignment="Center"/>
+                </ToggleButton>
+
+                <ToggleButton Grid.Column="4"
+                              Width="32"
+                              Height="32"
+                              Margin="2"
+                              Padding="0"
+                              IsChecked="{Binding IsFilterSent, Mode=TwoWay}"
+                              ToolTip="Відправлені">
+                    <ToggleButton.Style>
+                        <Style TargetType="ToggleButton" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                            <Style.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Foreground" Value="LightGreen"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+
+                    <md:PackIcon Kind="SendOutline"
+                                 Margin="0 0 2 0"
+                                 Width="26"
+                                 Height="26"
+                                 VerticalAlignment="Center"/>
+                </ToggleButton>
+
+                <ToggleButton Grid.Column="5"
+                              Width="32"
+                              Height="32"
+                              Margin="2"
+                              Padding="0"
+                              IsChecked="{Binding IsFilterErrors, Mode=TwoWay}"
+                              ToolTip="З помилками">
+                    <ToggleButton.Style>
+                        <Style TargetType="ToggleButton" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                            <Style.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Foreground" Value="LightGreen"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+
+                    <md:PackIcon Kind="ErrorOutline"
+                                 Margin="0 0 2 0"
+                                 Width="26"
+                                 Height="26"
+                                 VerticalAlignment="Center"/>
+                </ToggleButton>
+
+                <Button Grid.Column="7"
+                        Width="32"
+                        Height="32"
+                        Margin="2"
+                        Padding="0"
+                        Command="{Binding RefreshCommand}"
+                        ToolTip="Оновити список"
+                        Style="{StaticResource MaterialDesignRaisedButton}">
+                    <md:PackIcon Kind="Refresh"
+                                 Margin="0 0 2 0"
+                                 Width="26"
+                                 Height="26"
+                                 VerticalAlignment="Center"/>
+                </Button>
+
+                <TextBlock Grid.Column="9"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           FontSize="20"
+                           Text="Від:"/>
+                
+                <DatePicker Grid.Column="11"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            MinWidth="130"
+                            FontSize="20"
+                            SelectedDate="{Binding SelectedDate, Mode=TwoWay}"/>
+
+                <Button Grid.Column="13"
+                        Width="32"
+                        Height="32"
+                        Margin="2"
+                        Padding="0"
+                        Command="{Binding CancelDateSelectionCommand}"
+                        ToolTip="Відмінити обрану дату"
+                        Style="{StaticResource MaterialDesignRaisedButton}">
+                    <md:PackIcon Kind="DeleteCircleOutline"
+                                 Margin="0 0 2 0"
+                                 Width="26"
+                                 Height="26"
+                                 VerticalAlignment="Center"/>
+                </Button>
+
+                <Button Grid.Column="15"
+                        Width="32"
+                        Height="32"
+                        Margin="2"
+                        Padding="0"
+                        Command="{Binding AdvancedFilterCommand}"
+                        ToolTip="Розширений пошук повідомлень"
+                        Style="{StaticResource MaterialDesignRaisedButton}">
+                    <md:PackIcon Kind="SearchGlobe"
+                                 Margin="0 0 2 0"
+                                 Width="26"
+                                 Height="26"
+                                 VerticalAlignment="Center"/>
+                </Button>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="CrybbBot.Views.Dialogs.YesNoDialogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:md="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+             xmlns:conv="clr-namespace:CrybbBot.Converters">
+    <UserControl.Background>
+        <ImageBrush ImageSource="/Resources/bg_dialog.png"
+                    Stretch="Fill"/>
+    </UserControl.Background>
+
+    <UserControl.Resources>
+        <conv:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <StackPanel Margin="16">
+        <TextBlock Text="{Binding Title}"
+                   FontSize="18"
+                   Margin="0,0,0,8"
+                   Visibility="{Binding Title, Converter={StaticResource StringToVisibilityConverter}}"/>
+        <TextBlock Text="{Binding Message}"
+                   FontSize="16"
+                   Margin="0,0,0,16"
+                   Visibility="{Binding Message, Converter={StaticResource StringToVisibilityConverter}}"/>
+
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Content="Так"
+                    Command="{x:Static md:DialogHost.CloseDialogCommand}"
+                    CommandParameter="True"/>
+            <Border Width="10"/>
+            <Button Content="Ні"
+                    Command="{x:Static md:DialogHost.CloseDialogCommand}"
+                    CommandParameter="False"/>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

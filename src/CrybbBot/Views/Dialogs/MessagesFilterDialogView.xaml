@@ -1,0 +1,592 @@
+﻿<UserControl x:Class="CrybbBot.Views.Dialogs.MessagesFilterDialogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:conv="clr-namespace:CrybbBot.Converters"
+             xmlns:beh="clr-namespace:CrybbBot.Behavior">
+    <UserControl.Background>
+        <ImageBrush ImageSource="/Resources/bg_dialog.png"
+                    Stretch="Fill"/>
+    </UserControl.Background>
+
+    <UserControl.Resources>
+        <conv:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
+        <conv:MessagesFilterDialogResultConverter x:Key="MessagesFilterDialogResultConverter"/>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </UserControl.Resources>
+
+	<StackPanel Margin="16">
+        <TextBlock Grid.Row="0"
+				   Grid.ColumnSpan="3"
+				   Text="Розширений пошук повідомлень"
+				   FontWeight="Black"
+				   HorizontalAlignment="Center"
+				   FontSize="18"
+				   Margin="0"/>
+        
+		<md:Transitioner VerticalAlignment="Stretch"
+						 HorizontalAlignment="Stretch"
+						 SelectedIndex="{Binding TransitionerIndex, Mode=OneWay}">
+			<md:TransitionerSlide>
+				<md:TransitionerSlide.OpeningEffects>
+					<md:TransitionEffect Kind="ExpandIn"/>
+				</md:TransitionerSlide.OpeningEffects>
+				<md:TransitionerSlide.BackwardWipe>
+					<md:CircleWipe/>
+				</md:TransitionerSlide.BackwardWipe>
+				<md:TransitionerSlide.ForwardWipe>
+					<md:CircleWipe/>
+				</md:TransitionerSlide.ForwardWipe>
+				
+				<StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<RadioButton VerticalAlignment="Center"
+									 HorizontalAlignment="Stretch"
+									 Margin="0 3"
+									 FontSize="16"
+									 IsChecked="{Binding Ascending}"
+									 Content="Сортувати від старих до нових"
+									 Background="LightGreen"/>
+
+						<Border HorizontalAlignment="Stretch"
+								Margin="5 0"/>
+
+						<RadioButton VerticalAlignment="Center"
+									 HorizontalAlignment="Stretch"
+									 Margin="0 3"
+									 FontSize="16"
+									 IsChecked="{Binding Descending}"
+									 Content="Сортувати від нових до старих"
+									 Background="LightGreen"/>
+					</StackPanel>
+
+					<Border HorizontalAlignment="Stretch"
+							Height="1"
+							Margin="-7 2 -7 0"
+							Background="#88FFFFFF"/>
+
+					<Grid HorizontalAlignment="Stretch">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="15"/>
+							<ColumnDefinition Width="*"/>
+						</Grid.ColumnDefinitions>
+
+						<CheckBox Grid.Row="0"
+								  Grid.Column="0"
+								  VerticalAlignment="Center"
+								  VerticalContentAlignment="Center"
+								  HorizontalAlignment="Stretch"
+								  FontSize="16"
+								  IsChecked="{Binding ScheduledDtFrom, Mode=TwoWay}"
+								  Content="Заплановано"
+								  Background="LightGreen"/>
+
+						<StackPanel Grid.Row="0"
+									Grid.Column="2"
+									Orientation="Vertical">
+							<RadioButton VerticalAlignment="Center"
+										 HorizontalAlignment="Stretch"
+										 FontSize="16"
+										 IsChecked="True"
+										 Background="LightGreen">
+								<StackPanel Orientation="Horizontal"
+											VerticalAlignment="Center">
+									<TextBlock Text="На"
+											   FontSize="16"
+											   Margin="0 0 10 0"
+											   VerticalAlignment="Center"/>
+									<DatePicker Grid.Column="11"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												MinWidth="130"
+												FontSize="20"
+												SelectedDate="{Binding ScheduledExact, Mode=TwoWay}"/>
+								</StackPanel>
+							</RadioButton>
+
+							<RadioButton VerticalAlignment="Center"
+										 HorizontalAlignment="Stretch"
+										 FontSize="16"
+										 Background="LightGreen">
+								<StackPanel Orientation="Horizontal"
+											VerticalAlignment="Center">
+									<TextBlock Text="Від"
+											   FontSize="16"
+											   Margin="0 0 10 0"
+											   VerticalAlignment="Center"/>
+									<DatePicker Grid.Column="11"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												MinWidth="130"
+												FontSize="20"
+												SelectedDate="{Binding ScheduledFrom, Mode=TwoWay}"/>
+									<TextBlock Text="до"
+											   FontSize="16"
+											   Margin="10 0"
+											   VerticalAlignment="Center"/>
+									<DatePicker Grid.Column="11"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												MinWidth="130"
+												FontSize="20"
+												SelectedDate="{Binding ScheduledTo, Mode=TwoWay}"/>
+								</StackPanel>
+							</RadioButton>
+						</StackPanel>
+
+						<Border Grid.Row="1"
+								Grid.ColumnSpan="3"
+								HorizontalAlignment="Stretch"
+								Height="1"
+								Margin="-7 6 -7 0"
+								Background="#88FFFFFF"/>
+
+						<CheckBox Grid.Row="2"
+								  Grid.Column="0"
+								  VerticalAlignment="Center"
+								  VerticalContentAlignment="Center"
+								  HorizontalAlignment="Stretch"
+								  FontSize="16"
+								  IsChecked="{Binding CreatedDtFrom, Mode=TwoWay}"
+								  Content="Створено"
+								  Background="LightGreen"/>
+
+						<StackPanel Grid.Row="2"
+									Grid.Column="2"
+									Orientation="Vertical">
+							<RadioButton VerticalAlignment="Center"
+										 HorizontalAlignment="Stretch"
+										 FontSize="16"
+										 IsChecked="True"
+										 Background="LightGreen">
+								<DatePicker Grid.Column="11"
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Center"
+											MinWidth="130"
+											FontSize="20"
+											SelectedDate="{Binding CreatedExact, Mode=TwoWay}"/>
+							</RadioButton>
+
+							<RadioButton VerticalAlignment="Center"
+										 HorizontalAlignment="Stretch"
+										 FontSize="16"
+										 Background="LightGreen">
+								<StackPanel Orientation="Horizontal"
+											VerticalAlignment="Center">
+									<TextBlock Text="Між"
+											   FontSize="16"
+											   Margin="0 0 10 0"
+											   VerticalAlignment="Center"/>
+									<DatePicker Grid.Column="11"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												MinWidth="130"
+												FontSize="20"
+												SelectedDate="{Binding CreatedFrom, Mode=TwoWay}"/>
+									<TextBlock Text="та"
+											   FontSize="16"
+											   Margin="10 0"
+											   VerticalAlignment="Center"/>
+									<DatePicker Grid.Column="11"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												MinWidth="130"
+												FontSize="20"
+												SelectedDate="{Binding CreatedTo, Mode=TwoWay}"/>
+								</StackPanel>
+							</RadioButton>
+						</StackPanel>
+					</Grid>
+
+					<Border HorizontalAlignment="Stretch"
+							Height="1"
+							Margin="-7 6 -7 2"
+							Background="#88FFFFFF"/>
+
+					<CheckBox VerticalAlignment="Center"
+							  VerticalContentAlignment="Center"
+							  HorizontalAlignment="Center"
+							  Margin="0 3 0 0"
+							  FontSize="16"
+							  IsChecked="{Binding SelectAll, Mode=TwoWay}"
+							  FontWeight="Black"
+							  Content="Усі"
+							  Background="LightGreen">
+						<CheckBox.LayoutTransform>
+							<ScaleTransform ScaleX="1.1"
+											ScaleY="1.1"/>
+						</CheckBox.LayoutTransform>
+					</CheckBox>
+
+					<Grid HorizontalAlignment="Stretch">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="20"/>
+							<ColumnDefinition Width="*"/>
+						</Grid.ColumnDefinitions>
+
+						<StackPanel Grid.Column="0"
+									Orientation="Vertical">
+							<CheckBox VerticalAlignment="Center"
+									  VerticalContentAlignment="Center"
+									  Margin="0 3"
+									  FontSize="16"
+									  IsChecked="{Binding Scheduled, Mode=TwoWay}"
+									  Content="Заплановані"
+									  Background="LightGreen"/>
+
+							<CheckBox VerticalAlignment="Center"
+									  VerticalContentAlignment="Center"
+									  Margin="0 3"
+									  FontSize="16"
+									  IsChecked="{Binding NotScheduled, Mode=TwoWay}"
+									  Content="Без запланованих"
+									  Background="LightGreen"/>
+
+							<Border HorizontalAlignment="Stretch"
+									Margin="0 2"/>
+
+							<CheckBox VerticalAlignment="Center"
+									  VerticalContentAlignment="Center"
+									  Margin="0 3"
+									  FontSize="16"
+									  IsChecked="{Binding Sent, Mode=TwoWay}"
+									  Content="Відправлені"
+									  Background="LightGreen"/>
+
+							<CheckBox VerticalAlignment="Center"
+									  VerticalContentAlignment="Center"
+									  Margin="0 3"
+									  FontSize="16"
+									  IsChecked="{Binding NotSent, Mode=TwoWay}"
+									  Content="Без відправлених"
+									  Background="LightGreen"/>
+
+							<Border HorizontalAlignment="Stretch"
+									Margin="0 2"/>
+
+							<CheckBox VerticalAlignment="Center"
+									  VerticalContentAlignment="Center"
+									  Margin="0 3"
+									  FontSize="16"
+									  IsChecked="{Binding WithErrors, Mode=TwoWay}"
+									  Content="З помилками при відправленні"
+									  Background="LightGreen"/>
+
+							<CheckBox VerticalAlignment="Center"
+									  VerticalContentAlignment="Center"
+									  Margin="0 3"
+									  FontSize="16"
+									  IsChecked="{Binding WithoutErrors, Mode=TwoWay}"
+									  Content="Без помилок при відправленні"
+									  Background="LightGreen"/>
+						</StackPanel>
+
+						<StackPanel Grid.Column="2"
+									Orientation="Vertical">
+							<CheckBox VerticalAlignment="Center"
+									  VerticalContentAlignment="Center"
+									  Margin="0 3"
+									  FontSize="16"
+									  IsChecked="{Binding WithAttachments, Mode=TwoWay}"
+									  Content="З прикріпленнями"
+									  Background="LightGreen"/>
+
+							<CheckBox VerticalAlignment="Center"
+									  VerticalContentAlignment="Center"
+									  Margin="0 3"
+									  FontSize="16"
+									  IsChecked="{Binding WithoutAttachments, Mode=TwoWay}"
+									  Content="Без прикріплень"
+									  Background="LightGreen"/>
+
+							<GroupBox IsEnabled="{Binding WithAttachments, Mode=TwoWay}">
+								<GroupBox.Header>
+									<TextBlock Text="Тип прикріплень"
+											   FontSize="16"
+											   Margin="0 -7"
+											   Visibility="{Binding Message, Converter={StaticResource StringToVisibilityConverter}}"/>
+								</GroupBox.Header>
+
+								<StackPanel Orientation="Vertical"
+											Margin="0 -7">
+									<CheckBox VerticalAlignment="Center"
+											  VerticalContentAlignment="Center"
+											  Margin="0 3"
+											  FontSize="16"
+											  IsChecked="{Binding AttachmentsAll, Mode=TwoWay}"
+											  Content="Усі"
+											  Background="LightGreen"/>
+
+									<CheckBox VerticalAlignment="Center"
+											  VerticalContentAlignment="Center"
+											  Margin="0 3"
+											  FontSize="16"
+											  IsChecked="{Binding AttachmentsImages, Mode=TwoWay}"
+											  Content="Зображення"
+											  Background="LightGreen"/>
+
+									<CheckBox VerticalAlignment="Center"
+											  VerticalContentAlignment="Center"
+											  Margin="0 3"
+											  FontSize="16"
+											  IsChecked="{Binding AttachmentsFiles, Mode=TwoWay}"
+											  Content="Файли"
+											  Background="LightGreen"/>
+
+									<CheckBox VerticalAlignment="Center"
+											  VerticalContentAlignment="Center"
+											  Margin="0 3"
+											  FontSize="16"
+											  IsChecked="{Binding AttachmentsFileReferences, Mode=TwoWay}"
+											  Content="Посилання"
+											  Background="LightGreen"/>
+								</StackPanel>
+							</GroupBox>
+						</StackPanel>
+					</Grid>
+					
+					<Border HorizontalAlignment="Stretch"
+							Height="1"
+							Margin="-7 6 -7 2"
+							Background="#88FFFFFF"/>
+
+					<CheckBox VerticalAlignment="Center"
+							  VerticalContentAlignment="Center"
+							  Margin="0 3"
+							  FontSize="16"
+							  IsChecked="{Binding ContainingText, Mode=TwoWay}"
+							  Content="Текст повинен містити:"
+							  Background="LightGreen"/>
+
+					<TextBox IsEnabled="{Binding ContainingText, Mode=OneWay}"
+							 FontSize="16"
+							 Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+				</StackPanel>
+			</md:TransitionerSlide>
+			
+			<md:TransitionerSlide>
+				<md:TransitionerSlide.OpeningEffects>
+					<md:TransitionEffect Kind="ExpandIn"/>
+				</md:TransitionerSlide.OpeningEffects>
+				<md:TransitionerSlide.BackwardWipe>
+					<md:CircleWipe/>
+				</md:TransitionerSlide.BackwardWipe>
+				<md:TransitionerSlide.ForwardWipe>
+					<md:CircleWipe/>
+				</md:TransitionerSlide.ForwardWipe>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="15"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <CheckBox Grid.Row="0"
+                              Grid.ColumnSpan="3"
+                              Margin="0 5"
+							  VerticalAlignment="Center"
+							  VerticalContentAlignment="Center"
+							  HorizontalAlignment="Stretch"
+							  FontSize="16"
+							  IsChecked="{Binding SearchByChannels, Mode=TwoWay}"
+							  Content="Пошук повідомлень за каналами"
+							  Background="LightGreen"/>
+                    
+                    <GroupBox Grid.Row="1"
+                              Grid.Column="0"
+                              VerticalAlignment="Stretch"
+                              HorizontalAlignment="Stretch"
+                              IsEnabled="{Binding SearchByChannels}">
+                        <GroupBox.Header>
+                            <Grid Margin="5 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <TextBlock VerticalAlignment="Center"
+										   FontSize="16"
+										   Text="Групи каналів"/>
+
+                                <Button Grid.Column="1"
+										Padding="8 0"
+                                        Margin="0 -5"
+										ToolTip="Зняти усі виділення"
+                                        Command="{Binding RemoveBundleSelectionCommand}">
+                                    <md:PackIcon Kind="Delete"
+												 Width="18"
+												 Height="18"
+												 VerticalAlignment="Center"/>
+                                </Button>
+                            </Grid>
+                        </GroupBox.Header>
+
+                        <ListView HorizontalAlignment="Stretch"
+								  VerticalAlignment="Stretch"
+								  HorizontalContentAlignment="Stretch"
+								  SelectionMode="Single"
+                                  MaxHeight="440"
+								  ItemsSource="{Binding Bundles}"
+                                  SelectionChanged="BundlesListView_SelectionChanged">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox Padding="5 0"
+                                              Margin="0 -5"
+											  VerticalAlignment="Center"
+											  VerticalContentAlignment="Center"
+											  HorizontalAlignment="Stretch"
+											  FontSize="16"
+											  IsChecked="{Binding Flag, Mode=TwoWay}"
+											  Content="{Binding Alias, Mode=OneWay}"
+                                              Checked="BundlesCheckBox_Checked"
+                                              Unchecked="BundlesCheckBox_Checked"
+											  Background="LightGreen"/>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </GroupBox>
+
+                    <GroupBox Grid.Row="1"
+                              Grid.Column="2"
+							  VerticalAlignment="Stretch"
+							  HorizontalAlignment="Stretch"
+                              IsEnabled="{Binding SearchByChannels}">
+                        <GroupBox.Header>
+                            <Grid Margin="5 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock VerticalAlignment="Center"
+										   FontSize="16"
+										   Text="Канали"/>
+
+                                <Button Grid.Column="1"
+                                        Padding="8 0"
+                                        Margin="0 -5"
+                                        ToolTip="Зняти усі виділення"
+                                        Command="{Binding RemoveChannelSelectionCommand}">
+                                    <md:PackIcon Kind="Delete"
+										 Width="18"
+										 Height="18"
+										 VerticalAlignment="Center"/>
+                                </Button>
+                            </Grid>
+                        </GroupBox.Header>
+
+                        <ListView HorizontalAlignment="Stretch"
+								  VerticalAlignment="Stretch"
+								  HorizontalContentAlignment="Stretch"
+								  SelectionMode="Single"
+                                  MaxHeight="440"
+								  ItemsSource="{Binding Channels}"
+                                  SelectionChanged="ChannelsListView_SelectionChanged">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox Padding="5 0"
+                                              Margin="0 -5"
+											  VerticalAlignment="Center"
+											  VerticalContentAlignment="Center"
+											  HorizontalAlignment="Stretch"
+											  FontSize="16"
+											  IsChecked="{Binding Flag, Mode=TwoWay}"
+											  Content="{Binding Alias, Mode=OneWay}"
+                                              Checked="ChannelsCheckBox_Checked"
+                                              Unchecked="ChannelsCheckBox_Checked"
+											  Background="LightGreen"/>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </GroupBox>
+                </Grid>
+			</md:TransitionerSlide>
+		</md:Transitioner>
+		
+		<Grid Margin="0 5 0 0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+
+			<Button Grid.Column="0"
+					HorizontalAlignment="Left"
+					VerticalAlignment="Center"
+					Command="{Binding SwitchToChannelsCommand}"
+					Visibility="{Binding SwitchToMessagesVisibility}">
+				<StackPanel Orientation="Horizontal">
+					<md:PackIcon Kind="PersonGroup"
+								 VerticalAlignment="Center"
+								 Width="20"
+								 Height="20"
+								 Margin="0 0 5 0"/>
+					<TextBlock Text="Канали"
+							   FontSize="16"/>
+					<TextBlock Text="(активовано)"
+							   FontSize="16"
+                               Margin="5 0 0 0"
+                               Foreground="#90EE90"
+                               Visibility="{Binding AnySelectedChannel, Converter={StaticResource BoolToVisibilityConverter}}"/>
+				</StackPanel>
+			</Button>
+
+			<Button Grid.Column="0"
+					HorizontalAlignment="Left"
+					VerticalAlignment="Center"
+					Command="{Binding SwitchToMessagesCommand}"
+					Visibility="{Binding SwitchToChannelsVisibility}">
+				<StackPanel Orientation="Horizontal">
+					<md:PackIcon Kind="Backspace"
+								 VerticalAlignment="Center"
+								 Width="20"
+								 Height="20"
+								 Margin="0 0 5 0"/>
+				</StackPanel>
+			</Button>
+
+			<StackPanel Grid.Column="1"
+						Orientation="Horizontal"
+						HorizontalAlignment="Right"
+						VerticalAlignment="Center">
+				<Button Command="{x:Static md:DialogHost.CloseDialogCommand}">
+					<Button.CommandParameter>
+                        <MultiBinding Converter="{StaticResource MessagesFilterDialogResultConverter}"
+									  ConverterParameter="True">
+                            <Binding Path="Filter"/>
+						</MultiBinding>
+					</Button.CommandParameter>
+					<StackPanel Orientation="Horizontal">
+						<md:PackIcon Kind="Search"
+									 VerticalAlignment="Center"
+									 Width="20"
+									 Height="20"
+									 Margin="0 0 2 0"/>
+						<TextBlock Text="Шукати"
+								   FontSize="16"
+								   Visibility="{Binding Message, Converter={StaticResource StringToVisibilityConverter}}"/>
+					</StackPanel>
+				</Button>
+				<Border Width="10"/>
+				<Button Content="Відмінити"
+						Command="{x:Static md:DialogHost.CloseDialogCommand}">
+					<Button.CommandParameter>
+                        <MultiBinding Converter="{StaticResource MessagesFilterDialogResultConverter}"
+									  ConverterParameter="False"/>
+					</Button.CommandParameter>
+				</Button>
+			</StackPanel>
+		</Grid>
+	</StackPanel>
+</UserControl>

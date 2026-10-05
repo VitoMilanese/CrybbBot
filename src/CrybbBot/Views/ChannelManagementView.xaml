@@ -1,0 +1,255 @@
+﻿<UserControl x:Class="CrybbBot.Views.ChannelManagementView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CrybbBot.Views"
+             xmlns:viewM="clr-namespace:CrybbBot.ViewModels"
+             xmlns:conv="clr-namespace:CrybbBot.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <viewM:ChannelManagementViewModel x:Key="ViewModel" />
+            <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+            <conv:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter"/>
+            <conv:ObjectToBoolConverter x:Key="ObjectToBoolConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid DataContext="{StaticResource ViewModel}"
+          Margin="1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <GroupBox Grid.Column="0"
+                  VerticalAlignment="Stretch"
+                  HorizontalAlignment="Stretch">
+            <GroupBox.Header>
+                <Grid HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock VerticalAlignment="Center"
+                               Margin="5 0"
+                               FontSize="16"
+                               Text="Групи каналів"/>
+
+                    <Button Grid.Column="1"
+                            Width="30"
+                            Height="30"
+                            Margin="-5"
+                            Padding="0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Background="{StaticResource MaterialDesignDarkSeparatorBackground}"
+                            ToolTip="Додати групу каналів"
+                            Command="{Binding AddBundleCommand}">
+                        <md:PackIcon Kind="AddToPhotos"
+                                     Width="16"
+                                     Height="16"
+                                     VerticalAlignment="Center"/>
+                    </Button>
+                </Grid>
+            </GroupBox.Header>
+
+            <ListView x:Name="BundlesList"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch"
+                      HorizontalContentAlignment="Stretch"
+                      MinHeight="100"
+                      SelectionMode="Single"
+                      ItemsSource="{Binding Bundles}"
+                      SelectedItem="{Binding SelectedBundle}"
+                      AllowDrop="True"
+                      PreviewDragOver="Bundles_PreviewDragOver"
+                      PreviewDragLeave="Bundles_PreviewDragLeave"
+                      Drop="Bundles_Drop">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border>
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="Margin" Value="-4"/>
+                                    <Setter Property="Padding" Value="4"/>
+                                    <Setter Property="CornerRadius" Value="5"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Highlighted}" Value="True">
+                                            <Setter Property="Background" Value="#0FFFFFFF"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+
+                            <Grid Margin="5 2"
+                                  HorizontalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <!-- TEXT -->
+                                <StackPanel Orientation="Horizontal">
+                                    <md:PackIcon Kind="Input"
+                                                 Width="16"
+                                                 Height="16"
+                                                 Margin="0 0 3 0"
+                                                 FontWeight="{Binding TextFontWeight, Mode=OneWay}"
+                                                 VerticalAlignment="Center"
+                                                 Visibility="{Binding Highlighted, Mode=OneWay, Converter={StaticResource BoolToVisibility}}"/>
+
+                                    <TextBlock Grid.Column="0"
+                                               VerticalAlignment="Center"
+                                               FontSize="16"
+                                               FontWeight="{Binding TextFontWeight, Mode=OneWay}"
+                                               Text="{Binding Text}" />
+                                </StackPanel>
+
+                                <!-- EDIT BUTTON -->
+                                <Button Grid.Column="1"
+                                        Margin="10 0 5 0"
+                                        Padding="8 3"
+                                        ToolTip="Переіменувати"
+                                        Click="EditBundle_Click"
+                                        MouseLeftButtonUp="Button_MouseLeftButtonUp"
+                                        Visibility="{Binding CanBeModified, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+                                    <md:PackIcon Kind="Edit"
+                                                 Width="16"
+                                                 Height="16"
+                                                 VerticalAlignment="Center"/>
+                                </Button>
+
+                                <!-- DELETE BUTTON -->
+                                <Button Grid.Column="2"
+                                        Padding="8 3"
+                                        ToolTip="Видалити"
+                                        Click="DeleteBundle_Click"
+                                        MouseLeftButtonUp="Button_MouseLeftButtonUp"
+                                        Visibility="{Binding CanBeDeleted, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+                                    <md:PackIcon Kind="Delete"
+                                                 Width="16"
+                                                 Height="16"
+                                                 VerticalAlignment="Center"/>
+                                </Button>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </GroupBox>
+
+        <GroupBox Grid.Column="2"
+                  VerticalAlignment="Stretch"
+                  HorizontalAlignment="Stretch">
+            <GroupBox.Header>
+                <Grid HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch"
+                      Height="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock VerticalAlignment="Center"
+                               Margin="5 0"
+                               FontSize="16"
+                               Text="Канали"
+                               Visibility="{Binding SelectedBundle, Mode=OneWay, Converter={StaticResource ObjectToVisibilityConverter}, ConverterParameter=Invert}"/>
+
+                    <TextBlock VerticalAlignment="Center"
+                               Margin="5 0"
+                               FontSize="16"
+                               Visibility="{Binding SelectedBundle, Mode=OneWay, Converter={StaticResource ObjectToVisibilityConverter}}">
+                        <Run Text="Канали в"/>
+                        <Run Text="{Binding SelectedBundle.Text, Mode=OneWay}" FontWeight="Black"/>
+                    </TextBlock>
+
+                    <Button Grid.Column="1"
+                            Width="30"
+                            Height="30"
+                            Margin="-5"
+                            Padding="0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Background="{StaticResource MaterialDesignDarkSeparatorBackground}"
+                            ToolTip="Додати канал"
+                            Command="{Binding AddChannelCommand}"
+                            IsEnabled="{Binding SelectedBundle, Mode=OneWay, Converter={StaticResource ObjectToBoolConverter}}">
+                        <md:PackIcon Kind="AddToPhotos"
+                                     Width="16"
+                                     Height="16"
+                                     VerticalAlignment="Center"/>
+                    </Button>
+                </Grid>
+            </GroupBox.Header>
+
+            <ListView x:Name="ChannelsList"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch"
+                      HorizontalContentAlignment="Stretch"
+                      MinHeight="100"
+                      SelectionMode="Single"
+                      ItemsSource="{Binding Channels}"
+                      SelectedItem="{Binding SelectedChannel}"
+                      PreviewMouseLeftButtonDown="Channels_PreviewMouseLeftButtonDown"
+                      PreviewMouseMove="Channels_PreviewMouseMove">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="5 2"
+                              HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- TEXT -->
+                            <TextBlock Grid.Column="0"
+                                       VerticalAlignment="Center"
+                                       FontSize="16"
+                                       Text="{Binding Alias}" />
+
+                            <!-- EDIT BUTTON -->
+                            <Button Grid.Column="1"
+                                    Margin="10 0 0 0"
+                                    Padding="8 3"
+                                    ToolTip="Переіменувати"
+                                    Click="EditChannel_Click"
+                                    MouseLeftButtonUp="Button_MouseLeftButtonUp"
+                                    Visibility="{Binding CanBeModified, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+                                <md:PackIcon Kind="Edit"
+                                             Width="16"
+                                             Height="16"
+                                             VerticalAlignment="Center"/>
+                            </Button>
+
+                            <!-- DELETE BUTTON -->
+                            <Button Grid.Column="2"
+                                    Margin="5 0 0 0"
+                                    Padding="8 3"
+                                    ToolTip="Видалити"
+                                    Click="DeleteChannel_Click"
+                                    MouseLeftButtonUp="Button_MouseLeftButtonUp"
+                                    Visibility="{Binding CanBeDeleted, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+                                <md:PackIcon Kind="Delete"
+                                 Width="16"
+                                 Height="16"
+                                 VerticalAlignment="Center"/>
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </GroupBox>
+    </Grid>
+</UserControl>

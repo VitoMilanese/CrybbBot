@@ -1,0 +1,71 @@
+﻿<UserControl x:Class="CrybbBot.Views.Dialogs.FileReferenceDialogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:md="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+             xmlns:beh="clr-namespace:CrybbBot.Behavior"
+             xmlns:conv="clr-namespace:CrybbBot.Converters"
+             Width="400">
+    <UserControl.Background>
+        <ImageBrush ImageSource="/Resources/bg_dialog.png"
+                    Stretch="Fill"/>
+    </UserControl.Background>
+
+    <UserControl.Resources>
+        <conv:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
+        <conv:FileReferenceDialogResultConverter x:Key="FileReferenceDialogResultConverter"/>
+    </UserControl.Resources>
+
+    <StackPanel Margin="16">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="15"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="15"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Назва:"
+                       FontSize="16"/>
+            <TextBox Grid.Row="1"
+                     BorderThickness="1"
+                     Padding="2"
+                     FontSize="16"
+                     MaxLength="{Binding MaxLength, Mode=OneWay}"
+                     Text="{Binding Title}"
+                     beh:FocusBehavior.IsFocused="{Binding FocusTitle, Mode=TwoWay}"/>
+
+            <TextBlock Grid.Row="3"
+                       Text="URL:"
+                       FontSize="16"/>
+            <TextBox Grid.Row="4"
+                     BorderThickness="1"
+                     Padding="2"
+                     FontSize="16"
+                     Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
+
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Content="OK"
+                    Command="{x:Static md:DialogHost.CloseDialogCommand}">
+                <Button.CommandParameter>
+                    <MultiBinding Converter="{StaticResource FileReferenceDialogResultConverter}"
+                                  ConverterParameter="True">
+                        <Binding Path="Title"/>
+                        <Binding Path="Url"/>
+                    </MultiBinding>
+                </Button.CommandParameter>
+            </Button>
+            <Border Width="10"/>
+            <Button Content="Відмінити"
+                    Command="{x:Static md:DialogHost.CloseDialogCommand}">
+                <Button.CommandParameter>
+                    <MultiBinding Converter="{StaticResource FileReferenceDialogResultConverter}"
+                                  ConverterParameter="False"/>
+                </Button.CommandParameter>
+            </Button>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

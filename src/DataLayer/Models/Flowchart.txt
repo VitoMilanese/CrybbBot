@@ -1,0 +1,25 @@
+flowchart TB
+
+M["Message<br/>-----------------<br/>ID (PK)<br/>Text<br/>InsertDT<br/>ScheduleDT<br/>SendingDT<br/>Sent"]
+AA["AttachedAttachment<br/>-----------------<br/>ID (PK)<br/>MessageID (FK)<br/>Type<br/>Path<br/>Title<br/>FieldID"]
+AC["AttachedChannel<br/>-----------------<br/>ID (PK)<br/>MessageID (FK)<br/>ChannelID (FK)"]
+AB["AttachedBundle<br/>-----------------<br/>ID (PK)<br/>MessageID (FK)<br/>BundleID (FK)"]
+SE["SendingError<br/>-----------------<br/>ID (PK)<br/>MessageID (FK)<br/>ChannelID (FK)"]
+C["Channel<br/>-----------------<br/>ID (PK)<br/>SlackChannelID<br/>Alias"]
+B["Bundle<br/>-----------------<br/>ID (PK)<br/>Alias"]
+BCM["BundleChannelMapping<br/>-----------------<br/>ID (PK)<br/>BundleID (FK)<br/>ChannelID (FK)"]
+
+M -->|"1..*"| AA
+M -->|"1..*"| AC
+M -->|"1..*"| AB
+M -->|"1..*"| SE
+
+C -->|"1..*"| AC
+C -->|"1..*"| SE
+
+B -->|"1..*"| AB
+
+B -->|"1..*"| BCM
+C -->|"1..*"| BCM
+
+// https://mermaid.live/

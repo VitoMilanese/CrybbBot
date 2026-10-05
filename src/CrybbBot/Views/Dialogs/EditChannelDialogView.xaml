@@ -1,0 +1,338 @@
+﻿<UserControl x:Class="CrybbBot.Views.Dialogs.EditChannelDialogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:md="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+             xmlns:conv="clr-namespace:CrybbBot.Converters"
+             xmlns:beh="clr-namespace:CrybbBot.Behavior">
+    <UserControl.Background>
+        <ImageBrush ImageSource="/Resources/bg_dialog.png"
+                    Stretch="Fill"/>
+    </UserControl.Background>
+
+    <UserControl.Resources>
+        <conv:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
+        <conv:EditChannelDialogResultConverter x:Key="EditChannelDialogResultConverter"/>
+
+        <Style x:Key="IconCheckBoxStyle"
+               TargetType="CheckBox"
+               BasedOn="{StaticResource MaterialDesignCheckBox}">
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Center">
+
+                            <!-- Glyph box -->
+                            <Grid Width="20"
+                                  Height="20"
+                                  Margin="0,0,8,0">
+                                <!-- Box outline -->
+                                <Border x:Name="Box"
+                                        CornerRadius="2"
+                                        BorderThickness="2"
+                                        BorderBrush="{DynamicResource MaterialDesign.Brush.Primary}"
+                                        Background="Transparent"/>
+
+                                <!-- Your glyph icon -->
+                                <md:PackIcon x:Name="Glyph"
+                                             Kind="Lock"
+                                             Width="16"
+                                             Height="16"
+                                             Opacity="0"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center"
+                                             Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
+
+                                <md:PackIcon x:Name="Glyph2"
+                                             Kind="Check"
+                                             Width="16"
+                                             Height="16"
+                                             Opacity="0"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center"
+                                             Foreground="White"/>
+                            </Grid>
+
+                            <!-- Content -->
+                            <ContentPresenter VerticalAlignment="Center"
+                                              RecognizesAccessKey="True"/>
+                        </StackPanel>
+
+                        <ControlTemplate.Triggers>
+
+                            <!-- Checked state -->
+                            <Trigger Property="IsChecked"
+                                     Value="True">
+                                <Setter TargetName="Glyph"
+                                        Property="Opacity"
+                                        Value="1"/>
+                                <Setter TargetName="Glyph2"
+                                        Property="Opacity"
+                                        Value="1"/>
+                                <Setter TargetName="Box"
+                                        Property="Background"
+                                        Value="{DynamicResource MaterialDesign.Brush.Primary}"/>
+                                <Setter TargetName="Glyph"
+                                        Property="Foreground"
+                                        Value="{DynamicResource MaterialDesign.Brush.CardBackground}"/>
+                                <Setter TargetName="Box"
+                                        Property="BorderBrush"
+                                        Value="{DynamicResource MaterialDesign.Brush.Primary}"/>
+                            </Trigger>
+
+                            <!-- Disabled state -->
+                            <Trigger Property="IsEnabled"
+                                     Value="False">
+                                <Setter TargetName="Box"
+                                        Property="BorderBrush"
+                                        Value="#E53935"/>
+                                <Setter TargetName="Box"
+                                        Property="Background"
+                                        Value="Transparent"/>
+                                <Setter TargetName="Glyph"
+                                        Property="Foreground"
+                                        Value="#E53935"/>
+                                <Setter TargetName="Glyph2"
+                                        Property="Opacity"
+                                        Value="0"/>
+                                <!--<Setter Property="Foreground"
+                                        Value="#E53935"/>-->
+                                <Setter Property="Opacity"
+                                        Value="1"/>
+                            </Trigger>
+
+                            <!-- Disabled + Checked -->
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsEnabled"
+                                               Value="False"/>
+                                    <Condition Property="IsChecked"
+                                               Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="Box"
+                                        Property="Background"
+                                        Value="#E53935"/>
+                                <Setter TargetName="Glyph"
+                                        Property="Foreground"
+                                        Value="White"/>
+                                <Setter TargetName="Glyph"
+                                        Property="Opacity"
+                                        Value="1"/>
+                            </MultiTrigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <StackPanel Margin="16">
+        <TextBlock Text="Редагування каналу"
+                   HorizontalAlignment="Center"
+                   FontSize="18"
+                   FontWeight="Black"
+                   Margin="0,0,0,12"/>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="15"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="15"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="220"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="Auto" MinWidth="220"/>
+            </Grid.ColumnDefinitions>
+
+            <GroupBox>
+                <GroupBox.Header>
+                    <TextBlock Text="ID"
+                               Margin="0 -7 0 -5"
+                               FontSize="16"
+                               FontWeight="Black"/>
+                </GroupBox.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="15"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Старе:"
+                               FontSize="16"/>
+                    <TextBox Grid.Row="1"
+                             BorderThickness="1"
+                             Padding="2"
+                             FontSize="16"
+                             IsReadOnly="True"
+                             CharacterCasing="Upper"
+                             Text="{Binding OldId}"/>
+
+                    <TextBlock Grid.Row="3"
+                               Text="Нове:"
+                               FontSize="16"/>
+                    <TextBox Grid.Row="4"
+                             Margin="0 0 0 6"
+                             BorderThickness="1"
+                             Padding="2"
+                             FontSize="16"
+                             MaxLength="16"
+                             CharacterCasing="Upper"
+                             Text="{Binding NewId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             beh:FocusBehavior.IsFocused="{Binding FocusNewId, Mode=TwoWay}"/>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Grid.Row="2">
+                <GroupBox.Header>
+                    <TextBlock Text="НАЗВА"
+                               Margin="0 -7 0 -5"
+                               FontSize="16"
+                               FontWeight="Black"/>
+                </GroupBox.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="15"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Стара:"
+                               FontSize="16"/>
+                    <TextBox Grid.Row="1"
+                             BorderThickness="1"
+                             Padding="2"
+                             FontSize="16"
+                             IsReadOnly="True"
+                             Text="{Binding OldAlias}"/>
+
+                    <TextBlock Grid.Row="3"
+                               Text="Нова:"
+                               FontSize="16"/>
+                    <TextBox Grid.Row="4"
+                             Margin="0 0 0 6"
+                             BorderThickness="1"
+                             Padding="2"
+                             FontSize="16"
+                             MaxLength="{Binding MaxLength, Mode=OneWay}"
+                             Text="{Binding NewAlias, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </Grid>
+            </GroupBox>
+
+            <Grid Grid.RowSpan="3"
+                  Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <GroupBox>
+                    <GroupBox.Header>
+                        <Grid HorizontalAlignment="Stretch"
+                              Margin="0 -7 0 -5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <TextBlock VerticalAlignment="Center"
+                                       FontSize="16"
+                                       FontWeight="Black"
+                                       Text="ГРУПИ"/>
+
+                            <Button Grid.Column="1"
+                                    Padding="0"
+                                    Margin="1 2 0 1"
+                                    ToolTip="Оновити, скасувавши усі зміни"
+                                    Width="20"
+                                    Height="20"
+                                    Background="{StaticResource MaterialDesignLightSeparatorBackground}"
+                                    Command="{Binding ResetBundlesCommand}">
+                                <md:PackIcon Kind="Refresh"
+                                             Width="16"
+                                             Height="16"
+                                             VerticalAlignment="Center"/>
+                            </Button>
+                        </Grid>
+                    </GroupBox.Header>
+
+                    <ScrollViewer HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"
+                                  VerticalScrollBarVisibility="Auto"
+                                  Background="#22FFFFFF"
+                                  Margin="-10"
+                                  MaxHeight="260">
+                        <ItemsControl ItemsSource="{Binding Bundles}"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch"
+                                      HorizontalContentAlignment="Stretch"
+                                      Margin="5">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox VerticalAlignment="Center"
+                                              VerticalContentAlignment="Center"
+                                              Margin="0 3"
+                                              FontSize="16"
+                                              Content="{Binding BundleName}"
+                                              IsChecked="{Binding IsPresent, Mode=TwoWay}"
+                                              Focusable="{Binding IsE}"
+                                              IsHitTestVisible="{Binding IsEnabled}"
+                                              IsEnabled="{Binding IsEnabled}"
+                                              Style="{StaticResource IconCheckBoxStyle}"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </GroupBox>
+
+                <Button Grid.Row="2"
+                        Command="{Binding DeleteFromAllBundlesCommand}">
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <md:PackIcon Kind="AddToPhotos"
+                                     Margin="0 2 5 0"
+                                     VerticalAlignment="Center"/>
+                        <TextBlock VerticalAlignment="Center"
+                                   FontSize="16"
+                                   Text="Видалити з усіх груп"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Grid>
+
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Content="OK"
+                    Command="{x:Static md:DialogHost.CloseDialogCommand}">
+                <Button.CommandParameter>
+                    <MultiBinding Converter="{StaticResource EditChannelDialogResultConverter}"
+                                  ConverterParameter="True">
+                        <Binding Path="NewId"/>
+                        <Binding Path="OldId"/>
+                        <Binding Path="NewAlias"/>
+                        <Binding Path="OldAlias"/>
+                        <Binding Path="Bundles"/>
+                    </MultiBinding>
+                </Button.CommandParameter>
+            </Button>
+            <Border Width="10"/>
+            <Button Content="Відмінити"
+                    Command="{x:Static md:DialogHost.CloseDialogCommand}">
+                <Button.CommandParameter>
+                    <MultiBinding Converter="{StaticResource EditChannelDialogResultConverter}"
+                                  ConverterParameter="False"/>
+                </Button.CommandParameter>
+            </Button>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

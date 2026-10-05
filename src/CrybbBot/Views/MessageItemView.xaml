@@ -1,0 +1,206 @@
+﻿<UserControl x:Class="CrybbBot.Views.MessageItemView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CrybbBot.Views"
+             xmlns:conv="clr-namespace:CrybbBot.Converters"
+             xmlns:viewM="clr-namespace:CrybbBot.ViewModels"
+             xmlns:beh="clr-namespace:CrybbBot.Behavior"
+             mc:Ignorable="d" 
+             d:DesignHeight="80" d:DesignWidth="400">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <viewM:MessageItemViewModel x:Key="ViewModel" />
+            <conv:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Border DataContext="{StaticResource ViewModel}"
+            Background="#11FFFFFF"
+            BorderThickness="0.5"
+            BorderBrush="{StaticResource MaterialDesignShadowBrush}"
+            CornerRadius="10"
+            Margin="0 3">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!--DATE-->
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto" MinWidth="120"/>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <md:PackIcon Kind="InvoiceNew"
+                                 Margin="0 0 5 0"
+                                 FontWeight="Black"
+                                 VerticalAlignment="Center"/>
+                
+                    <TextBlock Grid.Column="1"
+                               VerticalAlignment="Center"
+                               FontSize="16"
+                               Text="Створено:"/>
+
+                    <TextBlock Grid.Column="3"
+                               VerticalAlignment="Center"
+                               FontSize="16"
+                               Text="{Binding InsertDTStr, Mode=OneWay}"/>
+
+                    <md:PackIcon Grid.Row="1"
+                                 Kind="Send"
+                                 Margin="0 0 5 0"
+                                 FontWeight="Black"
+                                 VerticalAlignment="Center"
+                                 Visibility="{Binding SendingDTVisibility, Mode=OneWay}"/>
+
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="1"
+                               VerticalAlignment="Center"
+                               FontSize="16"
+                               Text="Відпревлено:"
+                               Visibility="{Binding SendingDTVisibility, Mode=OneWay}"/>
+
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="3"
+                               VerticalAlignment="Center"
+                               FontSize="16"
+                               Text="{Binding SendingDTStr, Mode=OneWay}"
+                               Visibility="{Binding SendingDTVisibility, Mode=OneWay}"/>
+
+                    <md:PackIcon Grid.Row="2"
+                                 Kind="Schedule"
+                                 Margin="0 0 5 0"
+                                 FontWeight="Black"
+                                 VerticalAlignment="Center"
+                                 Visibility="{Binding ScheduledDTVisibility, Mode=OneWay}"/>
+
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="1"
+                               VerticalAlignment="Center"
+                               FontSize="16"
+                               Text="Заплановано:"
+                               Visibility="{Binding ScheduledDTVisibility, Mode=OneWay}"/>
+
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="3"
+                               VerticalAlignment="Center"
+                               FontSize="16"
+                               Text="{Binding ScheduledDTStr, Mode=OneWay}"
+                               Visibility="{Binding ScheduledDTVisibility, Mode=OneWay}"/>
+                </Grid>
+
+                <!--CHANNELS-->
+                <StackPanel Grid.Row="1"
+                            Margin="0 0 0 0"
+                            Orientation="Horizontal"
+                            Visibility="{Binding Recipients, Mode=OneWay, Converter={StaticResource StringToVisibilityConverter}}">
+                    <md:PackIcon Kind="PersonGroup"
+                                 Margin="0 0 2 0"
+                                 FontWeight="Black"
+                                 VerticalAlignment="Center"/>
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="16"
+                               Text="Кому:"/>
+                    <TextBlock VerticalAlignment="Center"
+                               Margin="3 0 0 0"
+                               FontSize="16"
+                               Text="{Binding Recipients, Mode=OneWay}"/>
+                </StackPanel>
+
+                <!--MESSAGE-->
+                <!--<TextBox Grid.Row="2"
+                         FontSize="16"
+                         Margin="5 3"
+                         HorizontalAlignment="Stretch"
+                         VerticalAlignment="Center"
+                         TextWrapping="Wrap"
+                         TextAlignment="Justify"
+                         IsReadOnly="True"
+                         Text="{Binding Message, Mode=OneWay}"/>-->
+                <RichTextBox Grid.Row="2"
+                             x:Name="tbMessage"
+                             FontSize="16"
+                             Margin="5 3"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             IsReadOnly="True"
+                             beh:SlackRichTextBoxBehavior.EnablePlainTextMode="True"
+                             PreviewMouseMove="TbMessage_PreviewMouseMove"
+                             MouseLeave="TbMessage_MouseLeave"/>
+
+                <!--ATTACHMENTS-->
+                <StackPanel Grid.Row="3"
+                            Margin="0 3"
+                            Orientation="Horizontal"
+                            Visibility="{Binding AttachmentsVisibility, Mode=OneWay}">
+                    <md:PackIcon Kind="AttachFile"
+                                 Margin="0 0 2 0"
+                                 FontWeight="Black"
+                                 VerticalAlignment="Center"/>
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="16">
+                        <Run Text="Файлів прикріплено:"/>
+                        <Run Text="{Binding AttachmentsNumber, Mode=OneWay}"/>
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+
+            <!--BUTTONS-->
+            <StackPanel Grid.Column="2"
+                        Grid.RowSpan="4"
+                        Margin="5"
+                        Orientation="Vertical"
+                        VerticalAlignment="Top">
+                <Button Padding="0"
+                        Margin="0"
+                        Width="25"
+                        Height="25"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Click="Delete_Click"
+                        Style="{StaticResource MaterialDesignRaisedButton}">
+                    <md:PackIcon Kind="Delete"
+                                 Width="20"
+                                 Height="20"
+                                 VerticalAlignment="Center"/>
+                </Button>
+                <Border Height="10"/>
+                <Button Padding="0"
+                        Margin="0"
+                        Width="25"
+                        Height="25"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Click="Edit_Click"
+                        Style="{StaticResource MaterialDesignRaisedButton}">
+                    <md:PackIcon Kind="Edit"
+                                    Width="20"
+                                    Height="20"
+                                    VerticalAlignment="Center"/>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

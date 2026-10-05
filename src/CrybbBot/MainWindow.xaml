@@ -1,0 +1,218 @@
+﻿<Window x:Class="CrybbBot.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:views="clr-namespace:CrybbBot.Views"
+        xmlns:viewM="clr-namespace:CrybbBot.ViewModels"
+        Style="{StaticResource MaterialDesignWindow}"
+        Title="CrybbBot"
+        WindowStartupLocation="CenterScreen"
+        Height="530"
+        Width="800"
+        MinHeight="650"
+        MinWidth="800"
+        SizeChanged="Window_SizeChanged">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <viewM:MainWindowViewModel x:Key="ViewModel" />
+            <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid DataContext="{StaticResource ViewModel}">
+        <Grid.Background>
+            <ImageBrush ImageSource="{Binding Background, Mode=OneWay}"
+                        Stretch="Fill"/>
+        </Grid.Background>
+        <!-- MAIN CONTAINER -->
+        <md:DialogHost Identifier="RootDialog">
+            <Border x:Name="MainContainer">
+                <Grid Margin="16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Stretch"
+                                Margin="0 -14 0 6">
+                        <Button Content="🔙"
+                                ToolTip="Повернутися до головного меню"
+                                Padding="10 0"
+                                Margin="0 0 15 0"
+                                FontSize="20"
+                                Click="ShowMainMenu_Click"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                Visibility="{Binding MainMenuShortcutVisibility, Mode=OneWay}"/>
+
+                        <views:ButtonsPannel Height="36"
+                                             x:Name="btnsPnl"/>
+                    </StackPanel>
+                    <Border BorderThickness="0 0 0 1"
+                            Margin="-100 0 -100 3"
+                            BorderBrush="{StaticResource MaterialDesignDarkSeparatorBackground}"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"/>
+
+                    <md:Transitioner Grid.Row="1"
+                                     VerticalAlignment="Stretch"
+                                     HorizontalAlignment="Stretch"
+                                     SelectedIndex="{Binding TransitionerSelectedSlide, Mode=OneWay}">
+                        <!--MAIN MENU-->
+                        <md:TransitionerSlide>
+                            <md:TransitionerSlide.OpeningEffects>
+                                <md:TransitionEffect Kind="ExpandIn"/>
+                            </md:TransitionerSlide.OpeningEffects>
+                            <md:TransitionerSlide.BackwardWipe>
+                                <md:CircleWipe/>
+                            </md:TransitionerSlide.BackwardWipe>
+                            <md:TransitionerSlide.ForwardWipe>
+                                <md:CircleWipe/>
+                            </md:TransitionerSlide.ForwardWipe>
+
+                            <views:MainMenu VerticalAlignment="Stretch"
+                                            HorizontalAlignment="Stretch"
+                                            x:Name="_mainMenuView"/>
+                        </md:TransitionerSlide>
+
+                        <!--NEW MESSAGE-->
+                        <md:TransitionerSlide>
+                            <md:TransitionerSlide.OpeningEffects>
+                                <md:TransitionEffect Kind="ExpandIn"/>
+                            </md:TransitionerSlide.OpeningEffects>
+                            <md:TransitionerSlide.BackwardWipe>
+                                <md:CircleWipe/>
+                            </md:TransitionerSlide.BackwardWipe>
+                            <md:TransitionerSlide.ForwardWipe>
+                                <md:CircleWipe/>
+                            </md:TransitionerSlide.ForwardWipe>
+
+                            <views:NewMessageView VerticalAlignment="Stretch"
+                                                  HorizontalAlignment="Stretch"
+                                                  x:Name="_newMessageView"/>
+                        </md:TransitionerSlide>
+
+                        <!--ALL MESSAGES-->
+                        <md:TransitionerSlide>
+                            <md:TransitionerSlide.OpeningEffects>
+                                <md:TransitionEffect Kind="ExpandIn"/>
+                            </md:TransitionerSlide.OpeningEffects>
+                            <md:TransitionerSlide.BackwardWipe>
+                                <md:CircleWipe/>
+                            </md:TransitionerSlide.BackwardWipe>
+                            <md:TransitionerSlide.ForwardWipe>
+                                <md:CircleWipe/>
+                            </md:TransitionerSlide.ForwardWipe>
+
+                            <views:AllMessagesView VerticalAlignment="Stretch"
+                                                   HorizontalAlignment="Stretch"
+                                                   x:Name="_allMessagesView"/>
+                        </md:TransitionerSlide>
+
+                        <!--CHANNEL MANAGEMENT-->
+                        <md:TransitionerSlide>
+                            <md:TransitionerSlide.OpeningEffects>
+                                <md:TransitionEffect Kind="ExpandIn"/>
+                            </md:TransitionerSlide.OpeningEffects>
+                            <md:TransitionerSlide.BackwardWipe>
+                                <md:CircleWipe/>
+                            </md:TransitionerSlide.BackwardWipe>
+                            <md:TransitionerSlide.ForwardWipe>
+                                <md:CircleWipe/>
+                            </md:TransitionerSlide.ForwardWipe>
+
+                            <views:ChannelManagementView VerticalAlignment="Stretch"
+                                                         HorizontalAlignment="Stretch"
+                                                         x:Name="_channelManagementView"/>
+                        </md:TransitionerSlide>
+
+                        <!--SETTINGS-->
+                        <md:TransitionerSlide>
+                            <md:TransitionerSlide.OpeningEffects>
+                                <md:TransitionEffect Kind="ExpandIn"/>
+                            </md:TransitionerSlide.OpeningEffects>
+                            <md:TransitionerSlide.BackwardWipe>
+                                <md:CircleWipe/>
+                            </md:TransitionerSlide.BackwardWipe>
+                            <md:TransitionerSlide.ForwardWipe>
+                                <md:CircleWipe/>
+                            </md:TransitionerSlide.ForwardWipe>
+
+                            <views:SettingsView VerticalAlignment="Stretch"
+                                                HorizontalAlignment="Stretch"
+                                                x:Name="_settingsView"/>
+                        </md:TransitionerSlide>
+
+                        <!--DEVELOPER TOOLS-->
+                        <md:TransitionerSlide>
+                            <md:TransitionerSlide.OpeningEffects>
+                                <md:TransitionEffect Kind="ExpandIn"/>
+                            </md:TransitionerSlide.OpeningEffects>
+                            <md:TransitionerSlide.BackwardWipe>
+                                <md:CircleWipe/>
+                            </md:TransitionerSlide.BackwardWipe>
+                            <md:TransitionerSlide.ForwardWipe>
+                                <md:CircleWipe/>
+                            </md:TransitionerSlide.ForwardWipe>
+
+                            <views:DeveloperToolView VerticalAlignment="Stretch"
+                                                     HorizontalAlignment="Stretch"
+                                                     x:Name="_developerToolView"/>
+                        </md:TransitionerSlide>
+                    </md:Transitioner>
+                </Grid>
+            </Border>
+        </md:DialogHost>
+
+        <!-- Full-screen hit-test layer -->
+        <Border Width="{Binding WindowWidth, Mode=OneWay}"
+                Height="{Binding WindowHeight, Mode=OneWay}"
+                Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}"
+                IsHitTestVisible="{Binding IsBusy}"
+                Panel.ZIndex="9999">
+                
+            <Grid HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch">
+                <Grid.Background>
+                    <SolidColorBrush Color="#CCCCCC"
+                                     Opacity="0.1"/>
+                </Grid.Background>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <ProgressBar IsIndeterminate="True"
+                                Height="15">
+                    <ProgressBar.LayoutTransform>
+                        <RotateTransform Angle="180"/>
+                    </ProgressBar.LayoutTransform>
+                </ProgressBar>
+
+                <md:Card Grid.Row="1"
+                         Margin="0 2 2 0"
+                         HorizontalAlignment="Right"
+                         VerticalAlignment="Top"
+                         MaxWidth="500"
+                         BorderThickness="1"
+                         BorderBrush="#70000000"
+                         UniformCornerRadius="7">
+                    <md:Card.Background>
+                        <ImageBrush ImageSource="/Resources/bg_popup.png"
+                                    Stretch="Fill"/>
+                    </md:Card.Background>
+                        
+                    <TextBlock Grid.Row="1"
+                               Margin="25 15"
+                               Text="{Binding BusyText}"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap"
+                               FontSize="14"/>
+                </md:Card>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

@@ -1,0 +1,19 @@
+[MESSAGE]
+	Delete message (Done)
+	Preview message (Done)
+	Edit message (Done)
+		- only not yet sent messages
+		- if the message is already sent, prevent edit and allow only preview
+	Bundles/Channels - Message View (Done)
+	Bundles/Channels - All Messages View (Done)
+	Scheduler - To DB (Done)
+	Edit bundles/channels (Done)
+	Save changed message (Done)
+	Scheduler - To Slack (Done)
+	Markdown - except Code & Code Block (Done)
+	Message filtering (Done)
+	Errors
+	Message transactional insertion
+	Old message deletion
+	Markdown - Code & Code Block
+	CREATE INDEX IX_SendingError_MessageID ON SendingError(MessageID);
